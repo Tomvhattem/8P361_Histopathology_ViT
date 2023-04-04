@@ -33,6 +33,7 @@ hp_tuning = False   #Tuning parameter which (de)activates the keras tuner. False
 SEED = 42
 keras.utils.set_random_seed(SEED)
 
+data_path = 'C:\\Data\\'
 #Data Preprocessing
 NUM_CLASSES = 1
 IMAGE_SIZE = 96
@@ -89,7 +90,7 @@ def get_pcam_generators(base_dir, IMAGE_SIZE, train_batch_size=32, val_batch_siz
                                             class_mode='binary')
     return train_gen, val_gen
 
-train_gen, val_gen = get_pcam_generators('C:\\Data\\',BATCH_SIZE,BATCH_SIZE) #,IMAGE_SIZE,SEED
+train_gen, val_gen = get_pcam_generators(data_path ,BATCH_SIZE,BATCH_SIZE) #,IMAGE_SIZE,SEED
 
 # Data Augmentation
 data_augmentation = keras.Sequential(

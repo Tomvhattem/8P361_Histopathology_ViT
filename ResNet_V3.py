@@ -1,4 +1,8 @@
 '''
+TU/e Biomedical Engineering
+Group 01 For 8P361 Project AI for medical image analysis
+
+
 ResNet notes
 - Top layer with 1 class, sigmoid, run until converged
 - Learningrateschedule, data augmentation, adamW, binairycrossentropy
@@ -10,6 +14,9 @@ Tutorials/sources:
 - https://www.tensorflow.org/addons/api_docs/python/tfa/layers/StochasticDepth
 - https://keras.io/api/optimizers/
 - https://stackabuse.com/learning-rate-warmup-with-cosine-decay-in-keras-and-tensorflow/ 
+
+
+
 
 '''
 
@@ -41,6 +48,8 @@ keras.utils.set_random_seed(SEED)
 hp_tuning = True
 use_scheduler = False
 
+data_path = 'C:\\Data\\'
+
 """
 ## Set (hyper)parameters
 """
@@ -67,8 +76,8 @@ EPOCHS = 50
 def get_pcam_generators(base_dir, train_batch_size=32, val_batch_size=32):
 
     # dataset parameters
-    train_path = os.path.join(base_dir, 'train+val', 'train')
-    valid_path = os.path.join(base_dir, 'train+val','valid')
+    train_path = os.path.join(base_dir,'train')
+    valid_path = os.path.join(base_dir,'valid')
     
     # instantiate data generators
     datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
@@ -86,7 +95,7 @@ def get_pcam_generators(base_dir, train_batch_size=32, val_batch_size=32):
                                             class_mode='binary')
     return train_gen, val_gen, test_gen
 
-train_gen, val_gen, test_gen = get_pcam_generators('C:\\Data\\')
+train_gen, val_gen, test_gen = get_pcam_generators(data_path)
 
 """
 Build the ResNet model
