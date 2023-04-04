@@ -39,6 +39,7 @@ keras.utils.set_random_seed(SEED)
 
 # Toggle hp_tuning to enable tune mode
 hp_tuning = True
+use_scheduler = False
 
 """
 ## Set (hyper)parameters
@@ -48,12 +49,16 @@ NUM_CLASSES = 1
 IMAGE_SIZE = 96
 INPUT_SHAPE = (IMAGE_SIZE, IMAGE_SIZE, 3)
 
-# OPTIMIZER
-LEARNING_RATE = 1e-3 #! met warmingup wordt warmup_learning_rate factor 10 kleiner 
+MINI_EPOCHS = 1
 WEIGHT_DECAY = 0.0001
 
+if use_scheduler == True:
+    LEARNING_RATE = 1e-3 
+else:
+    LEARNING_RATE = 1e-4
+
 # TRAINING
-EPOCHS = 50 #!!!!!!!!!!!!!!!!!!
+EPOCHS = 50 
 
 """
 ## Get the data from generators
@@ -175,6 +180,7 @@ class WarmUpCosine(keras.optimizers.schedules.LearningRateSchedule):
 
 
 def run_experiment(model, model_name="ResNet50_test", hp_tuning=False, hp=0):
+    """"Running the experiment for the final run and experiments"""
     # Define the model checkpoint and Tensorboard callbacks
     checkpoint_filepath = 'model_weights\\' + model_name + '\\'
     checkpoint_callback = ModelCheckpoint(
@@ -237,9 +243,6 @@ def run_experiment(model, model_name="ResNet50_test", hp_tuning=False, hp=0):
         return model
 
 
-    # Load weights of best best version of the model
-    # model.load_weights('model_weights\\ResNet50_warmup_27-03\\')
-    
     history = model.fit(train_gen, steps_per_epoch=train_steps,
                         validation_data=val_gen,
                         validation_steps=val_steps,
@@ -262,7 +265,9 @@ def run_experiment(model, model_name="ResNet50_test", hp_tuning=False, hp=0):
     return history
 
 
-def een_wel_werkend_tuner(hp):
+def keras_tuner_build(hp):
+    """keras tuner model with hyperparameter as hp as only input, and returning 
+    a compiled keras model"""
     heckpoint_filepath = 'model_weights\\' + model_name + '\\'
     checkpoint_callback = ModelCheckpoint(
         checkpoint_filepath,
@@ -274,8 +279,8 @@ def een_wel_werkend_tuner(hp):
     tensorboard = TensorBoard(os.path.join('logs', (model_name)))
 
     # define the # steps per epoch and train the model
-    train_steps = train_gen.n//train_gen.batch_size 
-    val_steps = val_gen.n//val_gen.batch_size  
+    train_steps = train_gen.n//train_gen.batch_size // MINI_EPOCHS
+    val_steps = val_gen.n//val_gen.batch_size  // MINI_EPOCHS
 
     warmup_epoch_percentage = 0.10
     total_steps = train_steps*EPOCHS
@@ -313,13 +318,13 @@ if __name__ == '__main__':
     if hp_tuning == False:
         # Build and  run model with preset hyperparameters
         model = build_model()
-        history = run_experiment(model=model, model_name=('ResNet50_FinalV3_50epoch'), hp_tuning=False) #!!!!!! naam 
+        history = run_experiment(model=model, model_name=('ResNet50_FinalV3_50epoch'), hp_tuning=False)
     
     elif hp_tuning == True:
         # Start tuner to find best hyperparameters
         print('starting tuning process')
         tuner = keras_tuner.BayesianOptimization(
-            een_wel_werkend_tuner,
+            keras_tuner_build,
             objective='val_accuracy',
             max_trials=6,
             seed=SEED,
