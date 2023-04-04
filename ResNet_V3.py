@@ -41,8 +41,11 @@ import keras_tuner
 
 
 # Set seed for reproducibiltiy
-SEED = 42
-keras.utils.set_random_seed(SEED)
+from tensorflow.random import set_seed
+def reset_random_seeds():
+   os.environ['PYTHONHASHSEED']=str(42)
+   set_seed(42)
+   np.random.seed(42)
 
 # Toggle hp_tuning to enable tune mode
 hp_tuning = True

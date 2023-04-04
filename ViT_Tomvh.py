@@ -30,8 +30,12 @@ use_scheduler = True #Set to true for final model
 hp_tuning = False   #Tuning parameter which (de)activates the keras tuner. False for final model
 
 #Sets Random Seet
-SEED = 42
-keras.utils.set_random_seed(SEED)
+from tensorflow.random import set_seed
+def reset_random_seeds():
+   os.environ['PYTHONHASHSEED']=str(42)
+   set_seed(42)
+   np.random.seed(42)
+
 
 data_path = 'C:\\Data\\'
 #Data Preprocessing
