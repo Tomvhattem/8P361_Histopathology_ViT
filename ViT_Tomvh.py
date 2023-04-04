@@ -39,7 +39,12 @@ IMAGE_SIZE = 96
 INPUT_SHAPE = (IMAGE_SIZE, IMAGE_SIZE, 3)
 
 #Hyperparameters
-LEARNING_RATE = 0.0001
+# OPTIMIZER
+if use_scheduler == True:
+    LEARNING_RATE = 1e-3 
+else:
+    LEARNING_RATE = 1e-4
+
 WEIGHT_DECAY = 0.0001
 
 BATCH_SIZE = 32
@@ -306,8 +311,13 @@ def keras_tuner_build(hp):
     learning_rate = hp.Float("lr", min_value=1e-4, max_value=1e-2, sampling="log")
 
     # Select optimizer    
-    optimizer = tfa.optimizers.AdamW(
-        learning_rate=learning_rate, weight_decay=WEIGHT_DECAY)
+    hp_optimizer = hp.choice("LR_optimizer",['AdamW','RMSProp'])
+    if hp_optimizer == 'AdamW':
+            optimizer = tfa.optimizers.AdamW(learning_rate=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
+    elif hp_optimizer == 'RMSProp':
+            optimizer = tfa.optimizers.experimental.RMSprop(learning_rate=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
+       
+
 
     model.compile(
         optimizer=optimizer,
