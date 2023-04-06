@@ -11,7 +11,7 @@ requirements.txt shows all requirements present in the python environment this c
 ├── requirements.txt  <br />
 ├── ViT.py <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; — Build and run Vision Transformer<br />
-├── ResNet.py <br />
+├── ResNet50.py <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; — Build and run ResNet50 model<br />
 ├── CNN.py <br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; — Build and run simple CNN model<br />
