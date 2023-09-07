@@ -1,6 +1,6 @@
 # 8P361 Project AI for Medical Image Analysis
 ## Group 1
-By Tom van Hattem, Marijn de Lange, Koen Vat and Marcus Vroemen
+By Marijn de Lange, Koen Vat, Marcus Vroemen and Tom van Hattem
 
 ## Libraries and startup
 requirements.txt shows all requirements present in the python environment this code was developed on. The main libraries used are tensorflow, tensorflow_addons, keras_tuner and cuda for enabling GPU support .<br />
